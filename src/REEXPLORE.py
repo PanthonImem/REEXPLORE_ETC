@@ -45,7 +45,7 @@ class REEXPLORE:
             self.cooldown_count -= 1
             return self.commit_to_best_arm()
 
-        # Step 1: Exploration Phase
+        # Step 1: Exploration Phase / Re-exploration Phase
         if np.min(pulls) < Ne or (0 < self.reexplore_count < self.T_reexplore):
             if self.reexplore_count > 0:
                 self.reexplore_count += 1
@@ -62,7 +62,7 @@ class REEXPLORE:
             self.reexplore_count = 0
             self.cooldown_count = self.cooldown  # Start cooldown period
             return self.commit_to_best_arm()
-
+        
         # Step 3: Check if re-exploration is needed
         arm_profile = self.arm_reward_explore[self.get_best_arm()]
         latest_rewards_a_star = self.MAB.get_rewards_by_arm()[self.get_best_arm()][-self.M:]

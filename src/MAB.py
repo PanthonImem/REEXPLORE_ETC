@@ -61,13 +61,24 @@ class MAB:
         '''
         Reset the bandit to its initial state.
         '''
-        self.__reward = np.zeros(self.__K)  # Reset total rewards for each bandit
+        # Reset total rewards for each bandit
+        self.__reward = np.zeros(self.__K)
         self.__reward_list = []  # Clear the reward history
         self.__regrets = []  # Clear the regret history
         self.num_pulls = 0  # Reset total number of pulls
         self.num_pulls_by_arm = np.zeros(self.__K)  # Reset pulls for each arm
-        self.__mu_list = np.random.uniform(self.mu_low, self.mu_high, size=self.__K)  # Resample means
-        self.__rewards_by_arm = [[] for _ in range(self.__K)]  # Reset rewards history
+        
+        # Resample the initial means for the bandits
+        self.__mu_list = np.random.uniform(self.mu_low, self.mu_high, size=self.__K)
+        
+        # Resample the second set of means for after perturbation
+        self.__mu_list2 = self.__mu_list.copy()
+        perturbed_list = np.random.choice(self.__K, int(self.portion * self.__K), replace=False)
+        for ind in perturbed_list:
+            self.__mu_list2[ind] = np.random.uniform(self.mu_low, self.mu_high)
+        
+        # Reset rewards history for each arm
+        self.__rewards_by_arm = [[] for _ in range(self.__K)]
 
     def get_reward(self):
         '''
@@ -110,6 +121,12 @@ class MAB:
         Get the true mean values of the bandits
         '''
         return self.__mu_list
+
+    def get_mu_list2(self):
+        '''
+        Get the true mean values of the bandits
+        '''
+        return self.__mu_list2
 
     def get_rewards_by_arm(self):
         '''
