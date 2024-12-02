@@ -64,12 +64,12 @@ def plot_regret_double(mab, regrets_1, regrets_2, alg_name_1, alg_name_2):
     plt.figure(figsize=(8, 6))
     
     # Plot mean regrets for both algorithms
-    plt.plot(range(T), mean_regret_1, label=f"Mean Regret: {alg_name_1}")
-    plt.plot(range(T), mean_regret_2, label=f"Mean Regret: {alg_name_2}")
+    plt.plot(range(T), mean_regret_1, label=f"Mean Regret: {alg_name_1}", color = 'orange')
+    plt.plot(range(T), mean_regret_2, label=f"Mean Regret: {alg_name_2}", color = 'blue')
 
     # Fill the areas for 90% CI for both algorithms
-    plt.fill_between(range(T), lower_bound_1, upper_bound_1, color="b", alpha=0.1)
-    plt.fill_between(range(T), lower_bound_2, upper_bound_2, color="orange", alpha=0.1)
+    plt.fill_between(range(T), lower_bound_1, upper_bound_1, color="orange", alpha=0.1)
+    plt.fill_between(range(T), lower_bound_2, upper_bound_2, color="blue", alpha=0.1)
 
     # Add labels and title
     plt.xlabel("Step")
@@ -80,19 +80,19 @@ def plot_regret_double(mab, regrets_1, regrets_2, alg_name_1, alg_name_2):
     plt.axvline(mab._T_resampled, linestyle='--', color='red')
     
     # Add horizontal lines at the final mean regret values for both algorithms
-    plt.axhline(mean_regret_1[-1], linestyle='--', color='blue', alpha=0.5)
-    plt.axhline(mean_regret_2[-1], linestyle='--', color='orange', alpha=0.5)
+    plt.axhline(mean_regret_1[-1], linestyle='--', color='orange', alpha=0.5)
+    plt.axhline(mean_regret_2[-1], linestyle='--', color='blue', alpha=0.5)
     
     # Add numerical labels above the horizontal lines
     plt.text(
         T - 1, mean_regret_1[-1] + 0.1,  # Position of the label for algorithm 1
         f"{mean_regret_1[-1]:.2f}",       # Format the value to 2 decimal places
-        color='blue', fontsize=10, ha='center', va='bottom'
+        color='orange', fontsize=10, ha='center', va='bottom'
     )
     plt.text(
         T - 1, mean_regret_2[-1] + 0.1,  # Position of the label for algorithm 2
         f"{mean_regret_2[-1]:.2f}",       # Format the value to 2 decimal places
-        color='orange', fontsize=10, ha='center', va='bottom'
+        color='blue', fontsize=10, ha='center', va='bottom'
     )
 
     # Add legend
