@@ -51,26 +51,30 @@ class ETC:
     def __init__(self, MAB, Ne = 30):
         self.MAB = MAB
         self.Ne = Ne
+        self.committed_arm = None
 
     def reset(self):
         self.MAB.reset()
+        self.committed_arm = None
 
     def play_one_step(self):
-        T = self.MAB.get_T()
-        K = self.MAB.get_K()
         Ne = self.Ne
-
-        rewards = self.MAB.get_reward()  # Total rewards for each arm
         pulls = self.MAB.num_pulls_by_arm
 
-        if np.min(pulls) <= Ne:
-            a = np.where(pulls <= Ne)[0]
-            reward = self.MAB.pull(np.random.choice(a))
+        # Exploration Phase
+        if np.min(pulls) < Ne:
+            arms_to_explore = np.where(pulls < Ne)[0]
+            a = np.random.choice(arms_to_explore)
+            reward = self.MAB.pull(a)
             return reward
-        else:
+
+        # Commit Phase
+        if self.committed_arm is None:
+            rewards = self.MAB.get_reward()
             avg_rewards = np.divide(rewards, pulls, where=pulls != 0)
-            a = random_argmax(avg_rewards)
-            return self.MAB.pull(a) 
+            self.committed_arm = random_argmax(avg_rewards)
+
+        return self.MAB.pull(self.committed_arm)
 
 class Epgreedy:
     def __init__(self, MAB, delta=0.1):
